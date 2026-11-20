@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KirimAI — WhatsApp Blaster & AI Marketing</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .mono { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen">
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-20">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+      <div class="font-bold text-lg tracking-tight text-slate-900">KirimAI</div>
+      <div class="flex items-center gap-3">
+        <span id="waBadge" class="text-xs font-medium text-slate-600">Status: Memeriksa...</span>
+        <button onclick="connectWA()" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition">
+          Hubungkan WA
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- Kolom Kiri: QR WhatsApp + Kustomisasi Bisnis & AI Copywriting + Auto-Responder -->
+    <section class="lg:col-span-5 space-y-6">
+      <div class="bg-white border border-slate-200 rounded-xl p-5">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="font-semibold text-base">Koneksi WhatsApp Multi-Device</h2>
+          <button onclick="logoutWA()" class="text-xs text-red-600 hover:underline">Reset Sesi</button>
+        </div>
+        <div id="qrBox" class="flex flex-col items-center justify-center bg-slate-50 border border-slate-200 rounded-lg p-4 min-h-[180px] text-center">
+          <p class="text-sm text-slate-500">Menunggu status koneksi WhatsApp...</p>
+        </div>
+      </div>
+
+      <div class="bg-white border border-slate-200 rounded-xl p-5 space-y-4">
+        <h2 class="font-semibold text-base">Profil Bisnis & AI Copywriting</h2>
+        <div class="space-y-3">
+          <div>
+            <label class="block text-xs font-medium text-slate-600 mb-1">Nama Usaha</label>
+            <input id="businessName" type="text" placeholder="Contoh: Kopi Senja Nusantara" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600" />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-600 mb-1">Jenis Produk / Jasa</label>
+            <input id="productType" type="text" placeholder="Contoh: Kopi Arabika & Minuman Kekinian" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600" />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-600 mb-1">Deskripsi & Keunggulan</label>
+            <textarea id="description" rows="2" placeholder="Contoh: Biji kopi fresh roast, tanpa pengawet, siap antar" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"></textarea>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-medium text-slate-600 mb-1">Target Konsumen</label>
+              <input id="targetAudience" type="text" placeholder="Pekerja kantoran, mahasiswa" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600" />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-600 mb-1">Jenis Promo</label>
+              <input id="promoType" type="text" placeholder="Diskon 20% + Gratis Ongkir" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-600 mb-1">Gaya Bahasa (Tone)</label>
+            <select id="tone" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-600">
+              <option>Ramah &amp; Santai</option>
+              <option>Profesional &amp; Terpercaya</option>
+              <option>Persuasif &amp; Mendesak (FOMO)</option>
+              <option>Elegan &amp; Eksklusif</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-600 mb-1">Prompt AI Tambahan (Opsional)</label>
+            <input id="customPrompt" type="text" placeholder="Misal: Sertakan info garansi 7 hari" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600" />
+          </div>
+        </div>
+
+        <button id="btnGenerateAI" onclick="generateCopywriting()" class="w-full py-2.5 px-4 text-sm font-semibold rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition">
+          Generate AI Text
+        </button>
+
+        <div id="aiResults" class="space-y-2 pt-2"></div>
+      </div>
+
+      <div class="bg-white border border-slate-200 rounded-xl p-5 space-y-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="font-semibold text-base">AI Auto-Responder</h2>
+            <p class="text-xs text-slate-500">Balas chat masuk otomatis memakai profil bisnis di atas.</p>
+          </div>
+          <label class="inline-flex items-center cursor-pointer">
+            <input id="autoReplyToggle" type="checkbox" onchange="saveAutoResponder()" class="w-4 h-4 accent-emerald-600" />
+            <span class="ml-2 text-xs font-medium">Aktif</span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- Kolom Kanan: Nomor Tujuan (+ Kontak HP), Pesan Blast, Live Status, & AI Chatbot Gemini -->
+    <section class="lg:col-span-7 space-y-6">
+      <div class="bg-white border border-slate-200 rounded-xl p-5 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h2 class="font-semibold text-base">Kampanye WhatsApp Blast</h2>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" onclick="pickPhoneContacts()" class="px-2.5 py-1 text-xs font-medium rounded-md bg-slate-100 hover:bg-slate-200 text-slate-800">
+              Pilih Kontak HP
+            </button>
+            <button type="button" onclick="document.getElementById('vcfInput').click()" class="px-2.5 py-1 text-xs font-medium rounded-md bg-slate-100 hover:bg-slate-200 text-slate-800">
+              Import .VCF / .CSV
+            </button>
+            <input id="vcfInput" type="file" accept=".vcf,.vcard,.csv,.txt" class="hidden" onchange="importVcfFile(event)" />
+          </div>
+        </div>
+        <p id="contactNotice" class="text-xs text-slate-500 hidden"></p>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">
+            Daftar Nomor WhatsApp Tujuan (1 nomor per baris, opsional: <span class="mono">0812xxx|Nama</span>)
+          </label>
+          <textarea id="numbersText" rows="5" placeholder="081234567890|Budi&#10;6281987654321|Siti" class="w-full px-3 py-2 text-sm mono border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">
+            Pesan WhatsApp (Gunakan <span class="mono">{nama}</span> untuk personalisasi)
+          </label>
+          <textarea id="messageTemplate" rows="5" placeholder="Halo {nama}, ada promo spesial hari ini..." class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"></textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-slate-600 mb-1">Jeda Min (detik)</label>
+            <input id="minDelay" type="number" value="3" min="2" class="w-full px-3 py-2 text-sm mono border border-slate-200 rounded-lg" />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-600 mb-1">Jeda Maks (detik)</label>
+            <input id="maxDelay" type="number" value="5" min="3" class="w-full px-3 py-2 text-sm mono border border-slate-200 rounded-lg" />
+          </div>
+        </div>
+
+        <div class="flex gap-3">
+          <button id="btnBlast" onclick="startBlast()" class="flex-1 py-2.5 px-4 text-sm font-semibold rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition">
+            Kirim Blast
+          </button>
+          <button onclick="stopBlast()" class="py-2.5 px-4 text-sm font-semibold rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-100 transition">
+            Hentikan
+          </button>
+        </div>
+      </div>
+
+      <!-- Chatbot AI Gemini + Search Grounding -->
+      <div class="bg-white border border-slate-200 rounded-xl p-5 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h2 class="font-semibold text-base">AI Chatbot Gemini &amp; Google Search</h2>
+            <p class="text-xs text-slate-500">Diskusi strategi promo terkini atau revisi teks blast multi-turn.</p>
+          </div>
+          <label class="inline-flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
+            <input id="chatSearchToggle" type="checkbox" checked class="accent-emerald-600" />
+            <span>Google Search</span>
+          </label>
+        </div>
+
+        <div id="chatThread" class="bg-slate-50 border border-slate-200 rounded-lg p-3 h-60 overflow-y-auto space-y-2.5 text-xs">
+          <p class="text-slate-400 text-center py-12">Tanyakan ide promo musiman atau strategi broadcast ke Gemini AI.</p>
+        </div>
+
+        <div class="flex gap-2">
+          <input id="chatInput" type="text" placeholder="Tulis pertanyaan ke Gemini AI..." class="flex-1 px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600" onkeydown="if(event.key==='Enter') sendChat()" />
+          <button id="btnChat" onclick="sendChat()" class="px-4 py-2 text-sm font-semibold rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition">
+            Kirim
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-white border border-slate-200 rounded-xl p-5 space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="font-semibold text-base">Status Pengiriman Real-Time</h2>
+          <span id="blastSummary" class="text-xs mono text-slate-600">0 / 0 terkirim</span>
+        </div>
+        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+          <div id="blastProgress" class="bg-emerald-600 h-2 transition-all duration-300" style="width: 0%"></div>
+        </div>
+        <div id="blastTable" class="divide-y divide-slate-100 max-h-72 overflow-y-auto text-sm">
+          <p class="text-slate-400 text-xs py-4 text-center">Belum ada pengiriman aktif.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const chatHistory = [];
+
+    function normalizeClientPhone(raw) {
+      const d = String(raw || '').replace(/\D/g, '');
+      if (!d || d.length < 8) return null;
+      if (d.startsWith('0')) return '62' + d.slice(1);
+      if (d.startsWith('8')) return '62' + d;
+      return d;
+    }
+
+    function appendContacts(items) {
+      const box = document.getElementById('numbersText');
+      const map = new Map();
+      box.value.split(/[\n,;]+/).map(s => s.trim()).filter(Boolean).forEach(line => {
+        const [num, name] = line.split('|').map(s => s.trim());
+        const n = normalizeClientPhone(num);
+        if (n) map.set(n, name || 'Kak');
+      });
+      let added = 0;
+      items.forEach(item => {
+        const n = normalizeClientPhone(item.number);
+        if (n && !map.has(n)) {
+          map.set(n, item.name || 'Kontak HP');
+          added++;
+        }
+      });
+      box.value = Array.from(map.entries()).map(([n, name]) => n + '|' + name).join('\n');
+      const notice = document.getElementById('contactNotice');
+      notice.textContent = added + ' nomor kontak berhasil ditambahkan.';
+      notice.classList.remove('hidden');
+    }
+
+    async function pickPhoneContacts() {
+      const notice = document.getElementById('contactNotice');
+      if (!navigator.contacts || !navigator.contacts.select) {
+        notice.textContent = 'Contact Picker langsung hanya tersedia di Chrome Android. Gunakan tombol "Import .VCF / .CSV" dari hasil ekspor kontak HP.';
+        notice.classList.remove('hidden');
+        return;
+      }
+      try {
+        const selected = await navigator.contacts.select(['name', 'tel'], { multiple: true });
+        const list = [];
+        selected.forEach(p => {
+          const name = p.name?.[0] || 'Kontak HP';
+          (p.tel || []).forEach(t => list.push({ number: t, name }));
+        });
+        appendContacts(list);
+      } catch (e) {}
+    }
+
+    async function importVcfFile(e) {
+      const file = e.target.files?.[0];
+      e.target.value = '';
+      if (!file) return;
+      const text = await file.text();
+      const list = [];
+      if (/BEGIN:VCARD/i.test(text)) {
+        text.split(/BEGIN:VCARD/i).forEach(card => {
+          const fn = card.match(/^FN[^:]*:(.*)$/im)?.[1]?.trim() || 'Kontak HP';
+          for (const m of card.matchAll(/^TEL[^:]*:(.*)$/gim)) {
+            list.push({ number: m[1], name: fn });
+          }
+        });
+      } else {
+        text.split(/\r?\n/).forEach(line => {
+          const parts = line.split(/[;,|\t]/).map(s => s.replace(/^"|"$/g, '').trim());
+          if (parts[0]) list.push({ number: parts[0], name: parts[1] || 'Kak' });
+        });
+      }
+      appendContacts(list);
+    }
+
+    async function sendChat() {
+      const input = document.getElementById('chatInput');
+      const btn = document.getElementById('btnChat');
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = '';
+      btn.disabled = true;
+
+      chatHistory.push({ role: 'user', text });
+      renderChat();
+
+      try {
+        const res = await fetch('/api/ai/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            messages: chatHistory,
+            useSearchGrounding: document.getElementById('chatSearchToggle').checked,
+            businessProfile: {
+              businessName: document.getElementById('businessName').value,
+              productType: document.getElementById('productType').value,
+              targetAudience: document.getElementById('targetAudience').value,
+              promoType: document.getElementById('promoType').value,
+              tone: document.getElementById('tone').value,
+            },
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Gagal memuat respons AI');
+        chatHistory.push({ role: 'model', text: data.reply, sources: data.sources || [] });
+      } catch (err) {
+        chatHistory.push({ role: 'model', text: 'Error: ' + err.message, sources: [] });
+      } finally {
+        btn.disabled = false;
+        renderChat();
+      }
+    }
+
+    function renderChat() {
+      const box = document.getElementById('chatThread');
+      box.innerHTML = '';
+      chatHistory.forEach(m => {
+        const div = document.createElement('div');
+        div.className = m.role === 'user'
+          ? 'p-2.5 rounded-lg bg-slate-900 text-white ml-8 whitespace-pre-line'
+          : 'p-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 mr-8 space-y-1.5';
+        const p = document.createElement('p');
+        p.className = 'whitespace-pre-line';
+        p.textContent = m.text;
+        div.appendChild(p);
+        if (m.sources && m.sources.length) {
+          const srcDiv = document.createElement('div');
+          srcDiv.className = 'pt-1 border-t border-slate-100 text-[11px] text-emerald-700 space-y-0.5';
+          m.sources.slice(0, 3).forEach(s => {
+            const a = document.createElement('a');
+            a.href = s.uri;
+            a.target = '_blank';
+            a.className = 'block truncate hover:underline';
+            a.textContent = s.title;
+            srcDiv.appendChild(a);
+          });
+          div.appendChild(srcDiv);
+        }
+        box.appendChild(div);
+      });
+      box.scrollTop = box.scrollHeight;
+    }
+
+    async function pollWAStatus() {
+      try {
+        const res = await fetch('/api/wa/status');
+        const data = await res.json();
+        const badge = document.getElementById('waBadge');
+        const qrBox = document.getElementById('qrBox');
+
+        if (data.status === 'connected') {
+          badge.textContent = 'Terhubung: ' + (data.user?.id?.split(':')[0] || 'Aktif');
+          badge.className = 'text-xs font-semibold text-emerald-700';
+          qrBox.innerHTML = '<div class="text-emerald-700 font-semibold text-sm">WhatsApp Terhubung</div><div class="text-xs text-slate-500 mt-1 mono">' + (data.user?.id || '') + '</div>';
+        } else if (data.status === 'qr_ready' && data.qrDataUrl) {
+          badge.textContent = 'Menunggu Scan QR';
+          badge.className = 'text-xs font-semibold text-amber-600';
+          qrBox.innerHTML = '<img src="' + data.qrDataUrl + '" alt="QR WhatsApp" class="w-44 h-44 rounded-lg border border-slate-200" /><p class="text-xs text-slate-500 mt-2">Buka WhatsApp &gt; Perangkat Tertaut &gt; Tautkan Perangkat</p>';
+        } else if (data.status === 'connecting') {
+          badge.textContent = 'Menghubungkan...';
+          badge.className = 'text-xs font-medium text-slate-600';
+          qrBox.innerHTML = '<p class="text-sm text-slate-500">Menghubungkan ke server WhatsApp...</p>';
+        } else {
+          badge.textContent = 'Terputus';
+          badge.className = 'text-xs font-medium text-red-600';
+          qrBox.innerHTML = '<p class="text-sm text-slate-500">WhatsApp belum terhubung. Klik "Hubungkan WA" di kanan atas.</p>';
+        }
+      } catch (e) {}
+    }
+
+    async function connectWA() {
+      await fetch('/api/wa/connect', { method: 'POST' });
+      pollWAStatus();
+    }
+
+    async function logoutWA() {
+      await fetch('/api/wa/logout', { method: 'POST' });
+      pollWAStatus();
+    }
+
+    async function generateCopywriting() {
+      const btn = document.getElementById('btnGenerateAI');
+      const results = document.getElementById('aiResults');
+      btn.disabled = true;
+      btn.textContent = 'Menulis Copywriting AI...';
+      results.innerHTML = '';
+
+      try {
+        const res = await fetch('/api/ai/copywriting', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            businessName: document.getElementById('businessName').value,
+            productType: document.getElementById('productType').value,
+            description: document.getElementById('description').value,
+            targetAudience: document.getElementById('targetAudience').value,
+            promoType: document.getElementById('promoType').value,
+            tone: document.getElementById('tone').value,
+            customPrompt: document.getElementById('customPrompt').value,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Gagal memuat AI');
+
+        (data.variations || []).forEach((item) => {
+          const card = document.createElement('div');
+          card.className = 'border border-slate-200 rounded-lg p-3 bg-slate-50 space-y-2';
+          card.innerHTML =
+            '<div class="flex items-center justify-between gap-2">' +
+              '<span class="text-xs font-semibold text-slate-800">' + item.title + '</span>' +
+              '<button class="text-xs font-semibold text-emerald-700 hover:underline">Gunakan</button>' +
+            '</div>' +
+            '<p class="text-xs text-slate-600 whitespace-pre-line"></p>';
+          card.querySelector('p').textContent = item.message;
+          card.querySelector('button').onclick = () => {
+            document.getElementById('messageTemplate').value = item.message;
+          };
+          results.appendChild(card);
+        });
+      } catch (err) {
+        results.innerHTML = '<p class="text-xs text-red-600">' + err.message + '</p>';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Generate AI Text';
+      }
+    }
+
+    async function saveAutoResponder() {
+      await fetch('/api/autoresponder/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          enabled: document.getElementById('autoReplyToggle').checked,
+          businessName: document.getElementById('businessName').value,
+          productType: document.getElementById('productType').value,
+          description: document.getElementById('description').value,
+          targetAudience: document.getElementById('targetAudience').value,
+          promoType: document.getElementById('promoType').value,
+          tone: document.getElementById('tone').value,
+        }),
+      });
+    }
+
+    async function startBlast() {
+      const res = await fetch('/api/blast/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          numbersText: document.getElementById('numbersText').value,
+          messageTemplate: document.getElementById('messageTemplate').value,
+          minDelaySec: Number(document.getElementById('minDelay').value) || 3,
+          maxDelaySec: Number(document.getElementById('maxDelay').value) || 5,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) alert(data.error || 'Gagal memulai blast');
+      pollBlastStatus();
+    }
+
+    async function stopBlast() {
+      await fetch('/api/blast/stop', { method: 'POST' });
+    }
+
+    async function pollBlastStatus() {
+      try {
+        const res = await fetch('/api/blast/status');
+        const data = await res.json();
+        const summary = document.getElementById('blastSummary');
+        const progress = document.getElementById('blastProgress');
+        const table = document.getElementById('blastTable');
+
+        const done = data.sent + data.failed;
+        const pct = data.total > 0 ? Math.round((done / data.total) * 100) : 0;
+        summary.textContent = data.sent + ' terkirim · ' + data.failed + ' gagal / ' + data.total + ' total';
+        progress.style.width = pct + '%';
+
+        if (!data.items || data.items.length === 0) return;
+
+        table.innerHTML = data.items.map((item) => {
+          let label = 'Menunggu';
+          let cls = 'text-slate-500';
+          if (item.status === 'sending') { label = 'Mengirim...'; cls = 'text-amber-600 font-semibold'; }
+          if (item.status === 'sent') { label = 'Terkirim'; cls = 'text-emerald-700 font-semibold'; }
+          if (item.status === 'failed') { label = 'Gagal'; cls = 'text-red-600 font-semibold'; }
+          return '<div class="py-2 flex items-center justify-between gap-2">' +
+            '<div><span class="mono font-medium">' + item.number + '</span> <span class="text-xs text-slate-500">(' + item.name + ')</span></div>' +
+            '<span class="text-xs ' + cls + '">' + label + '</span>' +
+          '</div>';
+        }).join('');
+      } catch (e) {}
+    }
+
+    setInterval(pollWAStatus, 3000);
+    setInterval(pollBlastStatus, 1500);
+    pollWAStatus();
+    pollBlastStatus();
+  </script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+{
+  "name": "KirimAI - WhatsApp Blaster & AI Marketing",
+  "description": "Universal WhatsApp Blaster Marketing platform powered by Gemini AI copywriting, smart auto-responder, and Baileys multi-device anti-ban delivery queue.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
